@@ -10,7 +10,13 @@ class misc {
 
 	package {'git': ensure => installed }
 	package { 'libmysqlclient-dev': ensure => installed }
-  package {'libfontconfig1': 	ensure => installed 	}
+  	package {'libfontconfig1': 	ensure => installed 	}
+  	
+        package {'libXrender1': ensure => installed }
+        package {'libjpeg-dev': ensure => installed }
+        package {'libjpeg62': ensure => installed }
+        package {'libjpeg62:i386': ensure => installed }
+        package {'libfontconfig-dev': ensure => installed }
 
 	# exec { "install-wkhtmltopdf":
 	# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
