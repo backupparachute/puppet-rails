@@ -14,6 +14,8 @@ class misc {
   	
         package {'libXrender1': ensure => installed }
         package {'libjpeg-dev': ensure => installed }
+        package {'libjpeg62': ensure => installed }
+        package {'libjpeg62:i386': ensure => installed }
         package {'libfontconfig-dev': ensure => installed }
 
 	# exec { "install-wkhtmltopdf":
