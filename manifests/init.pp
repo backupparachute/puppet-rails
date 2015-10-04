@@ -11,7 +11,7 @@ class misc {
 	package {'git': ensure => installed }
 	package { 'libmysqlclient-dev': ensure => installed }
   	package {'libfontconfig1': 	ensure => installed 	}
-  	
+
         package {'libXrender1': ensure => installed }
         package {'libjpeg-dev': ensure => installed }
         package {'libjpeg62': ensure => installed }
@@ -45,7 +45,7 @@ class installrvm {
 
 class installruby {
     rvm_system_ruby {
-      '1.9.3':
+      '2.1.5':
         ensure => 'present',
 		default_use => true;
     }
@@ -53,7 +53,7 @@ class installruby {
 
 class installgems {
 
-  rvm_gem { '1.9.3/bundler': ensure => 'present', ;}
+  rvm_gem { '2.1.5/bundler': ensure => 'present', ;}
 
   #rvm_gem { '1.9.3/rails': ensure => 'present', ; }
 
@@ -85,3 +85,4 @@ class { misc: }
 #class { sqlite: }
 
 class { nginx: }
+class { swap: }
