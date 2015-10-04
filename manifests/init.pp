@@ -11,7 +11,7 @@ class misc {
 	package {'git': ensure => installed }
 	package { 'libmysqlclient-dev': ensure => installed }
   	package {'libfontconfig1': 	ensure => installed 	}
-  	
+
         package {'libXrender1': ensure => installed }
         package {'libjpeg-dev': ensure => installed }
         package {'libjpeg62': ensure => installed }
@@ -85,3 +85,4 @@ class { misc: }
 #class { sqlite: }
 
 class { nginx: }
+class { swap: }
