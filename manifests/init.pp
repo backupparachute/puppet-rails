@@ -85,4 +85,5 @@ class { misc: }
 #class { sqlite: }
 
 class { nginx: }
+class { logrotate: }
 class { swap: }
