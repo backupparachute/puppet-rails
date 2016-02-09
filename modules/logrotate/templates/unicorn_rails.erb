@@ -1,9 +1,10 @@
-/var/rails/shared/log/*.log
-/var/rails/shared/log/*.output
+/var/rails/shared/log/unicorn.*.log
+/var/rails/shared/log/production.log
+/var/rails/shared/log/qa.log
 {
   daily
   missingok
-  rotate 10
+  rotate 5 
   size 100M
   compress
   dateext
