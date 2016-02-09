@@ -3,10 +3,9 @@
 /var/rails/shared/log/qa.log
 {
   missingok
-  rotate 5
-  size 100M
+  rotate 20
+  size 25M
   compress
-  dateext
 
   # this is important if using "compress" since we need to call
   # the "lastaction" script below before compressing:
