@@ -5,9 +5,12 @@
 # statements for each of your virtual hosts to this file
 
 server {
-        client_max_body_size 20M;
+  client_max_body_size 20M;
 	listen   80 default;
+  listen   443 ssl;
 	server_name _;
+  ssl_certificate     /var/rails/current/ssl/2018/vehichaul-chain.crt;
+  ssl_certificate_key /var/rails/current/ssl/2018/vehichaul.key;
 
 	access_log /var/log/nginx/rails.access.log;
 
