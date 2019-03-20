@@ -1,5 +1,5 @@
 # stage { 'req-install': before => Stage['rvm-install'] }
-stage { 'req-install': }
+# stage { 'req-install': }
 
 Exec {
   path => ['/usr/sbin', '/usr/bin', '/sbin', '/bin']
@@ -85,6 +85,8 @@ class setup_rails {
       mode   => 755,
   }
 }
+
+stage { 'req-install': }
 
 class { requirements: stage => "req-install" }
 class { installrvm: }
