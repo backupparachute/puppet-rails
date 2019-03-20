@@ -5,7 +5,17 @@ Exec {
   path => ['/usr/sbin', '/usr/bin', '/sbin', '/bin']
 }
 
-
+exec { 'install-gpg-kyle':
+   # path    => '/usr/bin:/usr/sbin:/bin',
+   # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
+   command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
+   path        => '/usr/bin:/usr/sbin:/bin',
+   environment => 'HOME=/root',
+   unless      => 'gpg --list-keys D39DC0E3',
+   require => [
+    # Class['rvm::dependencies'],
+   ],
+ }
 
 # --- Packages -----------------------------------------------------------------
 
@@ -35,17 +45,17 @@ class requirements {
   exec { "apt-update":
     command => "apt-get -y update --fix-missing",
   }
- exec { 'install-gpg-kyle':
-    # path    => '/usr/bin:/usr/sbin:/bin',
-    # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
-    command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
-    path        => '/usr/bin:/usr/sbin:/bin',
-    environment => 'HOME=/root',
-    unless      => 'gpg --list-keys D39DC0E3',
-    require => [
-     # Class['rvm::dependencies'],
-    ],
-  }
+ # exec { 'install-gpg-kyle':
+ #    # path    => '/usr/bin:/usr/sbin:/bin',
+ #    # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
+ #    command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
+ #    path        => '/usr/bin:/usr/sbin:/bin',
+ #    environment => 'HOME=/root',
+ #    unless      => 'gpg --list-keys D39DC0E3',
+ #    require => [
+ #     # Class['rvm::dependencies'],
+ #    ],
+ #  }
 }
 
  
