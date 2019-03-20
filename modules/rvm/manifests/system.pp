@@ -28,6 +28,7 @@ class rvm::system($version=undef) {
     command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
     path        => '/usr/bin:/usr/sbin:/bin',
     environment => 'HOME=/root',
+	before  => Exec['system-rvm']
     unless      => 'gpg --list-keys D39DC0E3',
     require => [
       Class['rvm::dependencies'],
