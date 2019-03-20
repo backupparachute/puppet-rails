@@ -26,8 +26,11 @@ class misc {
 
 class requirements {
   group { "puppet": ensure => "present", }
+  #exec { "apt-update":
+   # command => "apt-get -y update",
+  #}
   exec { "apt-update":
-    command => "apt-get -y update",
+    command => "apt-get -y update --fix-missing",
   }
 
 }
