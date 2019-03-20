@@ -39,7 +39,7 @@ class installrvm {
 
 class installruby {
     rvm_system_ruby {
-      '1.9.3':
+      'ruby-2.1.5':
         ensure => 'present',
 		default_use => true;
     }
@@ -47,7 +47,7 @@ class installruby {
 
 class installgems {
 
-  rvm_gem { '1.9.3/bundler': ensure => 'present', ;}
+#  rvm_gem { '1.9.3/bundler': ensure => 'present', ;}
 
   #rvm_gem { '1.9.3/rails': ensure => 'present', ; }
 
