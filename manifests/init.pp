@@ -1,4 +1,4 @@
-#stage { 'req-install': before => Stage['rvm-install'] }
+# stage { 'req-install': before => Stage['rvm-install'] }
 stage { 'req-install': }
 
 Exec {
@@ -27,9 +27,9 @@ class misc {
 
 class requirements {
   group { "puppet": ensure => "present", }
-  #exec { "apt-update":
+  # exec { "apt-update":
    # command => "apt-get -y update",
-  #}
+  # }
   exec { "apt-update":
     command => "apt-get -y update --fix-missing",
   }
@@ -53,7 +53,7 @@ class installgems {
 
 #  rvm_gem { '1.9.3/bundler': ensure => 'present', ;}
 
-  #rvm_gem { '1.9.3/rails': ensure => 'present', ; }
+  # rvm_gem { '1.9.3/rails': ensure => 'present', ; }
 
 
 #	rvm_gemset {
