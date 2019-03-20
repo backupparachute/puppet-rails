@@ -91,7 +91,8 @@ class setup_rails {
 #stage { 'req-install': }
 class { misc: }
 
-class { requirements: stage => "req-install" }
+# class { requirements: stage => "req-install" }
+class { requirements: }
 class { installrvm: }
 class { installruby: require => Class[Installrvm] }
 class { installgems: require => Class[Installruby] }
