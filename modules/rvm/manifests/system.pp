@@ -19,7 +19,7 @@ class rvm::system($version=undef) {
   creates     => '/usr/local/rvm/bin/rvm',
     require => [
       Class['rvm::dependencies'],
-      Exec['install-gpg']
+#      Exec['install-gpg']
     ],
   }
 
