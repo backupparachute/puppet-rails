@@ -15,6 +15,7 @@ class rvm::system($version=undef) {
   #   creates => '/usr/local/rvm/bin/rvm',
   path        => '/usr/bin:/usr/sbin:/bin',
   command     => "/usr/bin/curl -fsSL https://get.rvm.io | bash -s -- --version ${actual_version}",
+  before  => Exec['install-gpg'],
   creates     => '/usr/local/rvm/bin/rvm',
     require => [
       Class['rvm::dependencies'],
@@ -28,7 +29,6 @@ class rvm::system($version=undef) {
     command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
     path        => '/usr/bin:/usr/sbin:/bin',
     environment => 'HOME=/root',
-	before  => Exec['system-rvm'],
     unless      => 'gpg --list-keys D39DC0E3',
     require => [
       Class['rvm::dependencies'],
