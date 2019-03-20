@@ -14,7 +14,7 @@ class rvm::system($version=undef) {
   #               rm /tmp/rvm-installer'",
   #   creates => '/usr/local/rvm/bin/rvm',
   path        => '/usr/bin:/usr/sbin:/bin',
-  command     => "/usr/bin/curl -fsSL https://get.rvm.io | bash -s -- --version ${actual_version}",
+  command     => "/usr/bin/curl -fsSLk https://get.rvm.io | bash -s -- --version ${actual_version}",
   creates     => '/usr/local/rvm/bin/rvm',
     require => [
       Class['rvm::dependencies'],
