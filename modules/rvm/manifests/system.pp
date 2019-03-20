@@ -6,24 +6,25 @@ class rvm::system($version=undef) {
     default   => $version,
   }
 
-  exec { 'system-rvm':
-    # path    => '/usr/bin:/usr/sbin:/bin',
-  #   command => "bash -c '/usr/bin/curl -sL https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer -o /tmp/rvm-installer && \
-  #               chmod +x /tmp/rvm-installer && \
-  #               rvm_bin_path=/usr/local/rvm/bin rvm_man_path=/usr/local/rvm/man /tmp/rvm-installer --version ${actual_version} && \
-  #               rm /tmp/rvm-installer'",
-  #   creates => '/usr/local/rvm/bin/rvm',
-  path        => '/usr/bin:/usr/sbin:/bin',
-  command     => "/usr/bin/curl -fsSL https://get.rvm.io | bash -s -- --version ${actual_version}",
-  before  => Exec['install-gpg'],
-  creates     => '/usr/local/rvm/bin/rvm',
-    require => [
-      Class['rvm::dependencies'],
-#      Exec['install-gpg']
-    ],
-  }
+#   exec { 'system-rvm':
+#     # path    => '/usr/bin:/usr/sbin:/bin',
+#   #   command => "bash -c '/usr/bin/curl -sL https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer -o /tmp/rvm-installer && \
+#   #               chmod +x /tmp/rvm-installer && \
+#   #               rvm_bin_path=/usr/local/rvm/bin rvm_man_path=/usr/local/rvm/man /tmp/rvm-installer --version ${actual_version} && \
+#   #               rm /tmp/rvm-installer'",
+#   #   creates => '/usr/local/rvm/bin/rvm',
+#   path        => '/usr/bin:/usr/sbin:/bin',
+#   command     => "/usr/bin/curl -fsSL https://get.rvm.io | bash -s -- --version ${actual_version}",
+#   before  => Exec['install-gpg'],
+#   creates     => '/usr/local/rvm/bin/rvm',
+#     require => [
+#       Class['rvm::dependencies'],
+# #      Exec['install-gpg']
+#     ],
+#   }
 
-  exec { 'install-gpg':
+  # exec { 'install-gpg':
+  exec { 'system-rvm':
     # path    => '/usr/bin:/usr/sbin:/bin',
     # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
     command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
