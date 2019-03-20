@@ -5,6 +5,8 @@ Exec {
   path => ['/usr/sbin', '/usr/bin', '/sbin', '/bin']
 }
 
+
+
 # --- Packages -----------------------------------------------------------------
 
 class misc {
@@ -86,7 +88,7 @@ class setup_rails {
   }
 }
 
-stage { 'req-install': }
+#stage { 'req-install': }
 class { misc: }
 
 class { requirements: stage => "req-install" }
