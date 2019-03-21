@@ -1,4 +1,4 @@
-# stage { 'req-install': before => Stage['rvm-install'] }
+stage { 'req-install': before => Stage['rvm-install'] }
 # stage { 'req-install': }
 
 Exec {
@@ -6,26 +6,27 @@ Exec {
 }
 
 # --- Packages -----------------------------------------------------------------
-
-class misc {
-
-	package {'git': ensure => installed }
-	package { 'libmysqlclient-dev': ensure => installed }
-        package {'libfontconfig1': 	ensure => installed 	}
-	package {'gnupg': ensure => installed }
-	# exec { "install-wkhtmltopdf":
-	# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
-	# 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
-	# 				&& sudo mv /tmp/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf",
-	# 	creates => "/usr/local/bin/wkhtmltopdf",
-	# }
-
-	# ExecJS runtime.
-	package { 'nodejs':  ensure => installed 	}
-
-}
+#
+# class misc {
+#
+# 	package {'git': ensure => installed }
+# 	package { 'libmysqlclient-dev': ensure => installed }
+#         package {'libfontconfig1': 	ensure => installed 	}
+# 	package {'gnupg': ensure => installed }
+# 	# exec { "install-wkhtmltopdf":
+# 	# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
+# 	# 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
+# 	# 				&& sudo mv /tmp/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf",
+# 	# 	creates => "/usr/local/bin/wkhtmltopdf",
+# 	# }
+#
+# 	# ExecJS runtime.
+# 	package { 'nodejs':  ensure => installed 	}
+#
+# }
 
 class requirements {
+
   group { "puppet": ensure => "present", }
   # exec { "apt-update":
    # command => "apt-get -y update",
@@ -44,12 +45,26 @@ class requirements {
      # Class['rvm::dependencies'],
     ],
   }
+package {'git': ensure => installed }
+package { 'libmysqlclient-dev': ensure => installed }
+      package {'libfontconfig1': 	ensure => installed 	}
+package {'gnupg': ensure => installed }
+# exec { "install-wkhtmltopdf":
+# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
+# 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
+# 				&& sudo mv /tmp/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf",
+# 	creates => "/usr/local/bin/wkhtmltopdf",
+# }
+
+# ExecJS runtime.
+package { 'nodejs':  ensure => installed 	}
 }
 
- 
+class { 'rvm': version => '1.29.2' }
 
 class installrvm {
-  include rvm
+  # include rvm
+
   rvm::system_user { rails-app: ; }
 }
 
@@ -87,15 +102,14 @@ class setup_rails {
 }
 
 #stage { 'req-install': }
-class { misc: }
 
-# class { requirements: stage => "req-install" }
-class { requirements: }
+
+class { requirements: stage => "req-install"; }
 class { installrvm: }
 class { installruby: require => Class[Installrvm] }
 class { installgems: require => Class[Installruby] }
 class { setup_rails: }
-
+# class { misc: }
 #class { sqlite: }
 
 class { nginx: }
