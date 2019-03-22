@@ -47,7 +47,7 @@ class requirements {
   }
 package {'git': ensure => installed }
 package { 'libmysqlclient-dev': ensure => installed }
-      package {'libfontconfig1': 	ensure => installed 	}
+# package {'libfontconfig1': 	ensure => installed 	}
 package {'gnupg': ensure => installed }
 # exec { "install-wkhtmltopdf":
 # 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
