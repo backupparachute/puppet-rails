@@ -113,3 +113,5 @@ class { setup_rails: }
 #class { sqlite: }
 
 class { nginx: }
+class { logrotate: }
+class { swap: }
