@@ -1,47 +1,31 @@
-# You may add here your
-# server {
-#	...
-# }
-# statements for each of your virtual hosts to this file
+upstream puma {
+  server unix:///var/rails/shared/tmp/sockets/appname-puma.sock;
+}
 
 server {
-  client_max_body_size 20M;
-	listen   80 default;
-  listen   443 ssl;
-	server_name _;
-  ssl_certificate     /var/rails/current/ssl/2019/chain.crt;
-  ssl_certificate_key /var/rails/current/ssl/2019/priv.key;
+  listen 80 default_server deferred;
+  # server_name example.com;
 
-	access_log /var/log/nginx/rails.access.log;
+  root /var/rails/current/public;
+  access_log /var/rails/current/log/nginx.access.log;
+  error_log /var/rails/current/log/nginx.error.log info;
 
-	root /var/rails/current/public;
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
 
-	location / {
-    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
-		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-		proxy_set_header Host $http_host;
-		proxy_redirect off;
+  try_files $uri/index.html $uri @puma;
+  location @puma {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
 
-	      # If you don't find the filename in the static files
-	      # Then request it from the unicorn server
-	      if (!-f $request_filename) {
-		proxy_pass http://localhost:8080;
-		break;
-	      }
+    proxy_pass http://puma;
+  }
 
-	}
-
-	location ~ ^/assets/ {
-	  expires 1y;
-	  add_header Cache-Control public;
-
-	  add_header ETag "";
-	  break;
-	}
-
-	error_page 500 502 503 404 /500.html;
-	location = /500.html {
-	  root /var/rails/current/public;
-	}
-
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 10M;
+  keepalive_timeout 10;
 }
