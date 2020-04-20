@@ -103,7 +103,7 @@ class installgems {
 }
 
 class setup_rails {
-  $rails_dirs = [ "/var/rails", "/var/rails/shared","/var/rails/shared/log","/var/rails/shared/pids","/var/rails/shared/system","/var/rails/shared/tmp", ]
+  $rails_dirs = [ "/var/rails", "/var/rails/shared","/var/rails/shared/log","/var/rails/shared/pids","/var/rails/shared/system","/var/rails/shared/tmp","/var/rails/shared/tmp/sockets","/var/rails/shared/tmp/pids", ]
 
   file { $rails_dirs:
       ensure => "directory",
