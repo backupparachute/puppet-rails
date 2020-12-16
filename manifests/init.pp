@@ -1,45 +1,83 @@
 stage { 'req-install': before => Stage['rvm-install'] }
+# stage { 'req-install': }
 
 Exec {
   path => ['/usr/sbin', '/usr/bin', '/sbin', '/bin']
 }
 
 # --- Packages -----------------------------------------------------------------
-
-class misc {
-
-	package {'git': ensure => installed }
-	package { 'libmysqlclient-dev': ensure => installed }
-  package {'libfontconfig1': 	ensure => installed 	}
-
-	# exec { "install-wkhtmltopdf":
-	# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
-	# 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
-	# 				&& sudo mv /tmp/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf",
-	# 	creates => "/usr/local/bin/wkhtmltopdf",
-	# }
-
-	# ExecJS runtime.
-	package { 'nodejs':  ensure => installed 	}
-
-}
+#
+# class misc {
+#
+# 	package {'git': ensure => installed }
+# 	package { 'libmysqlclient-dev': ensure => installed }
+#         package {'libfontconfig1': 	ensure => installed 	}
+# 	package {'gnupg': ensure => installed }
+# 	# exec { "install-wkhtmltopdf":
+# 	# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
+# 	# 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
+# 	# 				&& sudo mv /tmp/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf",
+# 	# 	creates => "/usr/local/bin/wkhtmltopdf",
+# 	# }
+#
+# 	# ExecJS runtime.
+# 	package { 'nodejs':  ensure => installed 	}
+#
+# }
 
 class requirements {
-  group { "puppet": ensure => "present", }
-  exec { "apt-update":
-    command => "apt-get -y update",
-  }
 
+  group { "puppet": ensure => "present", }
+  # exec { "apt-update":
+   # command => "apt-get -y update",
+  # }
+  exec { "apt-update":
+    command => "apt-get -y update --fix-missing",
+  }
+ exec { 'install-gpg-kyle':
+    # path    => '/usr/bin:/usr/sbin:/bin',
+    # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
+    command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
+    path        => '/usr/bin:/usr/sbin:/bin',
+    environment => 'HOME=/root',
+    unless      => 'gpg --list-keys D39DC0E3',
+    require => [
+     # Class['rvm::dependencies'],
+    ],
+  }
+package {'git': ensure => installed }
+package { 'libmysqlclient-dev': ensure => installed }
+# package {'libfontconfig1': 	ensure => installed 	}
+package {'gnupg': ensure => installed }
+# exec { "install-wkhtmltopdf":
+# 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
+# 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
+# 				&& sudo mv /tmp/wkhtmltopdf-i386 /usr/local/bin/wkhtmltopdf",
+# 	creates => "/usr/local/bin/wkhtmltopdf",
+# }
+
+# ExecJS runtime.
+	package {'libfontconfig1': 	ensure => installed 	}
+
+    package {'libXrender1': ensure => installed }
+    package {'libjpeg-dev': ensure => installed }
+    package {'libjpeg62': ensure => installed }
+    package {'libjpeg62:i386': ensure => installed }
+    package {'libfontconfig-dev': ensure => installed }
+	package { 'nodejs':  ensure => installed 	}
 }
 
+class { 'rvm': version => '1.29.2' }
+
 class installrvm {
-  include rvm
+  # include rvm
+
   rvm::system_user { rails-app: ; }
 }
 
 class installruby {
     rvm_system_ruby {
-      '1.9.3':
+      'ruby-2.1.10':
         ensure => 'present',
 		default_use => true;
     }
@@ -47,9 +85,9 @@ class installruby {
 
 class installgems {
 
-  rvm_gem { '1.9.3/bundler': ensure => 'present', ;}
+  rvm_gem { '2.1.10/bundler': ensure => '1.14.6', ;}
 
-  #rvm_gem { '1.9.3/rails': ensure => 'present', ; }
+  # rvm_gem { '1.9.3/rails': ensure => 'present', ; }
 
 
 #	rvm_gemset {
@@ -70,12 +108,17 @@ class setup_rails {
   }
 }
 
-class { requirements: stage => "req-install" }
+#stage { 'req-install': }
+
+
+class { requirements: stage => "req-install"; }
 class { installrvm: }
 class { installruby: require => Class[Installrvm] }
 class { installgems: require => Class[Installruby] }
 class { setup_rails: }
-class { misc: }
+# class { misc: }
 #class { sqlite: }
 
 class { nginx: }
+class { logrotate: }
+class { swap: }

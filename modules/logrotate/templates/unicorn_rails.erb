@@ -1,0 +1,22 @@
+/var/rails/shared/log/unicorn.*.log
+/var/rails/shared/log/production.log
+/var/rails/shared/log/qa.log
+{
+  missingok
+  rotate 20
+  size 25M
+  compress
+
+  # this is important if using "compress" since we need to call
+  # the "lastaction" script below before compressing:
+  delaycompress
+
+  # note the lack of the evil "copytruncate" option in this
+  # config.  Unicorn supports the USR1 signal and we send it
+  # as our "lastaction" action:
+  lastaction
+    pid=/var/rails/shared/pids/unicorn.pid
+    test -s $pid && kill -USR1 "$(cat $pid)"
+    return 0 ### incase unicorn pid doesn't exist
+  endscript
+}
