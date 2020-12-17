@@ -9,8 +9,8 @@ server {
 	listen   80 default;
   listen   443 ssl;
 	server_name _;
-  ssl_certificate     /var/rails/current/ssl/2019/chain.crt;
-  ssl_certificate_key /var/rails/current/ssl/2019/priv.key;
+  ssl_certificate     /var/rails/current/ssl/2021/chain.crt;
+  ssl_certificate_key /var/rails/current/ssl/2021/priv.key;
 
 	access_log /var/log/nginx/rails.access.log;
 
@@ -38,6 +38,17 @@ server {
 	  add_header ETag "";
 	  break;
 	}
+
+    location /nginx_status {
+       # enables HttpSubStatusModule, only allowed from loopback
+       # supports datadog nginx module
+
+        stub_status on;
+
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
 
 	error_page 500 502 503 404 /500.html;
 	location = /500.html {
