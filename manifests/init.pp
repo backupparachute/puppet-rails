@@ -84,6 +84,11 @@ class installruby {
       rvm_system_ruby {
       'ruby-2.5.0':
         ensure => 'present',
+		default_use => false;
+    }
+    rvm_system_ruby {
+      'ruby-2.5.8':
+        ensure => 'present',
 		default_use => true;
     }
 }
