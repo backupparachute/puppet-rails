@@ -57,6 +57,7 @@ package {'gnupg': ensure => installed }
 # }
 
 # ExecJS runtime.
+    package {'imagemagick': ensure => installed }
 	package {'libfontconfig1': 	ensure => installed 	}
 
     package {'libXrender1': ensure => installed }
