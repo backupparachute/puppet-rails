@@ -31,9 +31,14 @@ class requirements {
   # exec { "apt-update":
    # command => "apt-get -y update",
   # }
-  exec { "apt-update":
-    command => "apt-get -y update --fix-missing",
-  }
+  
+  ## 
+  # commented out because some repositories don't exist are failing on apt-get update
+  #
+  #exec { "apt-update":
+  #  command => "apt-get -y update --fix-missing",
+  #}
+  
  exec { 'install-gpg-kyle':
     # path    => '/usr/bin:/usr/sbin:/bin',
     # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
