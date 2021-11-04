@@ -35,9 +35,9 @@ class requirements {
   ## 
   # commented out because some repositories don't exist are failing on apt-get update
   #
-  #exec { "apt-update":
+  # exec { "apt-update":
   #  command => "apt-get -y update --fix-missing",
-  #}
+  # }
   
  exec { 'install-gpg-kyle':
     # path    => '/usr/bin:/usr/sbin:/bin',
