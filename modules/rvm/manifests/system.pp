@@ -25,7 +25,8 @@ class rvm::system($version=undef) {
   exec { 'install-gpg':
     # path    => '/usr/bin:/usr/sbin:/bin',
     # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
-    command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
+    # command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
+    command     => 'gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys D39DC0E3',
     path        => '/usr/bin:/usr/sbin:/bin',
     environment => 'HOME=/root',
     unless      => 'gpg --list-keys D39DC0E3',
