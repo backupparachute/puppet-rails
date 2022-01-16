@@ -5,6 +5,10 @@ upstream puma {
 server {
   listen 80 default_server deferred;
   # server_name example.com;
+ listen   443 ssl;
+	server_name _;
+  ssl_certificate     /var/rails/current/ssl/2022/chain.crt;
+  ssl_certificate_key /var/rails/current/ssl/2022/priv.key;
 
   root /var/rails/current/public;
   access_log /var/rails/shared/log/nginx.access.log;
@@ -15,6 +19,17 @@ server {
     expires max;
     add_header Cache-Control public;
   }
+
+   location /nginx_status {
+       # enables HttpSubStatusModule, only allowed from loopback
+       # supports datadog nginx module
+
+        stub_status on;
+
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
 
   try_files $uri/index.html $uri @puma;
   location @puma {
