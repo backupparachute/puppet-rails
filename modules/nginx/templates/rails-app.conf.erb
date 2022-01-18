@@ -3,12 +3,15 @@ upstream puma {
 }
 
 server {
-  listen 80 default_server deferred;
+#  listen 80 default_server deferred;
   # server_name example.com;
- listen   443 ssl;
-	server_name _;
+  listen 80
+  listen 443 ssl;
+  server_name _;
+
   ssl_certificate     /var/rails/current/ssl/2022/chain.crt;
   ssl_certificate_key /var/rails/current/ssl/2022/priv.key;
+  ssl_protocols TLSv1.2;
 
   root /var/rails/current/public;
   access_log /var/rails/shared/log/nginx.access.log;
