@@ -1,29 +1,45 @@
-upstream puma {
-  server unix:///var/rails/shared/tmp/sockets/puma.sock;
-}
+# You may add here your
+# server {
+#	...
+# }
+# statements for each of your virtual hosts to this file
 
 server {
-  listen 80 default_server deferred;
-  # server_name example.com;
- # listen 80
-  listen 443 ssl;
-  server_name _;
-
+  client_max_body_size 20M;
+	listen   80 default;
+  listen   443 ssl;
+	server_name _;
   ssl_certificate     /var/rails/current/ssl/2022/chain.crt;
   ssl_certificate_key /var/rails/current/ssl/2022/priv.key;
-#  ssl_protocols TLSv1.2;
 
-  root /var/rails/current/public;
-  access_log /var/rails/shared/log/nginx.access.log;
-  error_log /var/rails/shared/log/nginx.error.log info;
+	access_log /var/log/nginx/rails.access.log;
 
-  location ^~ /assets/ {
-    gzip_static on;
-    expires max;
-    add_header Cache-Control public;
-  }
+	root /var/rails/current/public;
 
-   location /nginx_status {
+	location / {
+    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_redirect off;
+
+	      # If you don't find the filename in the static files
+	      # Then request it from the unicorn server
+	      if (!-f $request_filename) {
+		proxy_pass http://localhost:8080;
+		break;
+	      }
+
+	}
+
+	location ~ ^/assets/ {
+	  expires 1y;
+	  add_header Cache-Control public;
+
+	  add_header ETag "";
+	  break;
+	}
+
+    location /nginx_status {
        # enables HttpSubStatusModule, only allowed from loopback
        # supports datadog nginx module
 
@@ -34,18 +50,9 @@ server {
         deny all;
     }
 
-  try_files $uri/index.html $uri @puma;
-  location @puma {
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $http_host;
-    proxy_redirect off;
-    proxy_ignore_client_abort on;
+	error_page 500 502 503 404 /500.html;
+	location = /500.html {
+	  root /var/rails/current/public;
+	}
 
-    proxy_pass http://puma;
-  }
-
-  error_page 500 502 503 504 /500.html;
-  client_max_body_size 256M;
-  keepalive_timeout 10;
 }
