@@ -6,6 +6,60 @@
 
 server {
   client_max_body_size 20M;
+	listen   80 ;
+  listen   443 ssl;
+	server_name *.tms.acertusdelivers.com tms.acertusdelivers.com;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_certificate     /var/rails/current/ssl/current/ace/chain.crt;
+  ssl_certificate_key /var/rails/current/ssl/current/ace/priv.key;
+
+	access_log /var/log/nginx/rails.access.log;
+
+	root /var/rails/current/public;
+
+	location / {
+    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_redirect off;
+
+	      # If you don't find the filename in the static files
+	      # Then request it from the unicorn server
+	      if (!-f $request_filename) {
+		proxy_pass http://localhost:8080;
+		break;
+	      }
+
+	}
+
+	location ~ ^/assets/ {
+	  expires 1y;
+	  add_header Cache-Control public;
+
+	  add_header ETag "";
+	  break;
+	}
+
+    location /nginx_status {
+       # enables HttpSubStatusModule, only allowed from loopback
+       # supports datadog nginx module
+
+        stub_status on;
+
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+
+	error_page 500 502 503 404 /500.html;
+	location = /500.html {
+	  root /var/rails/current/public;
+	}
+
+}
+
+server {
+  client_max_body_size 20M;
 	listen   80 default;
   listen   443 ssl;
 	server_name _;
