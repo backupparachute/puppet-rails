@@ -14,7 +14,8 @@ class rvm::system($version=undef) {
   #               rm /tmp/rvm-installer'",
   #   creates => '/usr/local/rvm/bin/rvm',
   path        => '/usr/bin:/usr/sbin:/bin',
-  command     => "/usr/bin/curl -fsSLk https://get.rvm.io | bash -s -- --version ${actual_version}",
+  # command     => "/usr/bin/curl -fsSL https://get.rvm.io | bash -s -- --version 1.29.2",
+    command     => "/usr/bin/curl -fsSL https://get.rvm.io | bash -s -- --version ${actual_version}",
   creates     => '/usr/local/rvm/bin/rvm',
     require => [
       Class['rvm::dependencies'],
@@ -25,8 +26,7 @@ class rvm::system($version=undef) {
   exec { 'install-gpg':
     # path    => '/usr/bin:/usr/sbin:/bin',
     # command => "/usr/bin/curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
-    # command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
-    command     => 'gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys D39DC0E3',
+    command     => 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3',
     path        => '/usr/bin:/usr/sbin:/bin',
     environment => 'HOME=/root',
     unless      => 'gpg --list-keys D39DC0E3',
