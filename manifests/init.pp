@@ -1,4 +1,4 @@
-stage { 'req-install': before => Stage['rvm-install'] }
+#stage { 'req-install': before => Stage['rvm-install'] }
 # stage { 'req-install': }
 
 Exec {
@@ -48,7 +48,7 @@ class requirements {
 package {'git': ensure => installed }
 package { 'libmysqlclient-dev': ensure => installed }
 # package {'libfontconfig1': 	ensure => installed 	}
-package {'gnupg': ensure => installed }
+#package {'gnupg': ensure => installed }
 # exec { "install-wkhtmltopdf":
 # 	command => "curl -s -o /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 https://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-i386.tar.bz2 \
 # 				&& tar xvjf /tmp/wkhtmltopdf-0.9.9-static-i386.tar.bz2 -C /tmp \
@@ -121,15 +121,67 @@ class setup_rails {
 
 #stage { 'req-install': }
 
+class install_mysql {
 
-class { requirements: stage => "req-install"; }
+	class { '::mysql::server':
+	  root_password    => 'password',
+	  override_options => { 'mysqld' => { 'bind_address' => '0.0.0.0', 'lower_case_table_names' => 1 } }
+	}
+
+	mysql::db { 'dev':
+		user     => 'dev',
+		password => 'password',
+		host     => 'localhost',
+		grant    => ['ALL'],
+	}
+
+	mysql_user {"root@%":
+		ensure			=> "present",
+		password_hash	=> mysql::password("password"),
+		require			=> Mysql_database["dev"],
+	}
+
+	mysql_user {"dev@%":
+		ensure			=> "present",
+		password_hash	=> mysql::password("password"),
+		require			=> Mysql_database["dev"],
+	}
+
+	mysql_grant { 'root@%/*.*':
+	  ensure     => 'present',
+	  options    => ['GRANT'],
+	  privileges => ['ALL'],
+	  table      => '*.*',
+	  user       => 'root@%',
+	  require 	 => Mysql_user["root@%"],
+	}
+
+	mysql_grant { 'dev@%/dev.*':
+	  ensure     => 'present',
+	  options    => ['GRANT'],
+	  privileges => ['ALL'],
+	  table      => 'dev.*',
+	  user       => 'dev@%',
+	  require 	 => Mysql_user["dev@%"],
+	}
+
+	# required for ruby mysql2 to compile
+	package { 'libmysqlclient-dev': }
+}
+
+
+#class { requirements: stage => "req-install"; }
 class { installrvm: }
-class { installruby: require => Class[Installrvm] }
-class { installgems: require => Class[Installruby] }
-class { setup_rails: }
+#class { installruby: require => Class[Installrvm] }
+class { installruby: }
+#class { installgems: require => Class[Installruby] }
+class { installgems: }
+#class { setup_rails: }
 # class { misc: }
 #class { sqlite: }
 
 class { nginx: }
-class { logrotate: }
-class { swap: }
+class { install_mysql: }
+
+#class { logrotate: }
+#class { swap: }git 
