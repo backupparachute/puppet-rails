@@ -77,11 +77,11 @@ class installrvm {
 }
 
 class installruby {
-    rvm_system_ruby {
-      'ruby-2.1.10':
-        ensure => 'present',
-		default_use => false;
-    }
+  #  rvm_system_ruby {
+  #    'ruby-2.1.10':
+  #      ensure => 'present',
+#		default_use => false;
+ #   }
       rvm_system_ruby {
       'ruby-2.5.0':
         ensure => 'present',
@@ -96,7 +96,7 @@ class installruby {
 
 class installgems {
 
-  rvm_gem { '2.1.10/bundler': ensure => '1.14.6', ;}
+#  rvm_gem { '2.1.10/bundler': ensure => '1.14.6', ;}
 
   # rvm_gem { '1.9.3/rails': ensure => 'present', ; }
 
