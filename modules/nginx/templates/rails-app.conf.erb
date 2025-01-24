@@ -2,12 +2,59 @@ upstream puma {
   server unix:///var/rails/shared/tmp/sockets/puma.sock;
 }
 
+
 server {
   listen 80 default_server deferred;
   # server_name example.com;
  # listen 80
+  listen 443 ssl default_server;
+  server_name _;
+
+  ssl_certificate     /var/rails/current/ssl/current/chain.crt;
+  ssl_certificate_key /var/rails/current/ssl/current/priv.key;
+#  ssl_protocols TLSv1.2;
+
+  root /var/rails/current/public;
+  access_log /var/rails/shared/log/nginx.access.log;
+  error_log /var/rails/shared/log/nginx.error.log info;
+
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+
+   location /nginx_status {
+       # enables HttpSubStatusModule, only allowed from loopback
+       # supports datadog nginx module
+
+        stub_status on;
+
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+
+  try_files $uri/index.html $uri @puma;
+  location @puma {
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_ignore_client_abort on;
+
+    proxy_pass http://puma;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 256M;
+  keepalive_timeout 10;
+}
+
+server {
+  listen 80;
   listen 443 ssl;
-  server_name *.acertusdelivers.vehichaul.com acertusdelivers.vehichaul.com;
+  server_name *.tms.acertusdelivers.com, tms.acertusdelivers.com;
 
   ssl_certificate     /var/rails/current/ssl/current/ace/chain.crt;
   ssl_certificate_key /var/rails/current/ssl/current/ace/priv.key;
@@ -51,14 +98,12 @@ server {
 }
 
 server {
-  listen 80 default_server deferred;
-  # server_name example.com;
- # listen 80
+  listen 80;
   listen 443 ssl;
-  server_name *.vehichaul.com;
+  server_name *.acertusdelivers.vehichaul.com;
 
-  ssl_certificate     /var/rails/current/ssl/current/chain.crt;
-  ssl_certificate_key /var/rails/current/ssl/current/priv.key;
+  ssl_certificate     /var/rails/current/ssl/current/ace/chain.crt;
+  ssl_certificate_key /var/rails/current/ssl/current/ace/priv.key;
 #  ssl_protocols TLSv1.2;
 
   root /var/rails/current/public;
@@ -97,4 +142,3 @@ server {
   client_max_body_size 256M;
   keepalive_timeout 10;
 }
-
