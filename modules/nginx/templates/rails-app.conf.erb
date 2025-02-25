@@ -3,11 +3,11 @@ upstream puma {
 }
 
 server {
-  client_max_body_size 20M;
+
   listen 80;
   listen 443 ssl;
   server_name *.tms.acertusdelivers.com, tms.acertusdelivers.com;
-  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
   ssl_certificate     /var/rails/current/ssl/current/ace/chain.crt;
   ssl_certificate_key /var/rails/current/ssl/current/ace/priv.key;
@@ -51,11 +51,11 @@ server {
 }
 
 server {
-  client_max_body_size 20M;
+  #client_max_body_size 20M;
   listen 80;
   listen 443 ssl;
   server_name *.acertusdelivers.vehichaul.com;
-  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
   ssl_certificate     /var/rails/current/ssl/current/ace/chain.crt;
   ssl_certificate_key /var/rails/current/ssl/current/ace/priv.key;
@@ -100,11 +100,11 @@ server {
 
 
 server {
-  client_max_body_size 20M;
+  #client_max_body_size 20M;
   listen 80 default_server deferred;
   listen 443 ssl default_server;
-	server_name *.vehichaul.com;
-  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+server_name *.vehichaul.com;
+  #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
   ssl_certificate     /var/rails/current/ssl/current/chain.crt;
   ssl_certificate_key /var/rails/current/ssl/current/priv.key;
