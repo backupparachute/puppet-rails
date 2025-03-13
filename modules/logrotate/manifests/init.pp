@@ -20,4 +20,10 @@ class logrotate {
         content => template("logrotate/delayed_job.erb"),
         require => Package['logrotate'],
     }
+
+    file { '/etc/logrotate.d/puma':
+        ensure  => file,
+        content => template("logrotate/puma.erb"),
+        require => Package['logrotate'],
+    }
 }
