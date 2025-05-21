@@ -4,7 +4,7 @@ upstream puma {
 
 server {
   listen 80 default_server deferred;
-  # server_name example.com;
+  server_name _;
 
   root /var/rails/current/public;
   access_log /var/rails/shared/log/nginx.access.log;
