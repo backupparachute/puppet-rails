@@ -55,7 +55,7 @@ server {
   #client_max_body_size 20M;
   listen 80;
   listen 443 ssl;
-  server_name *.acertusdelivers.vehichaul.com;
+  server_name *.acertusdelivers.vehichaul.com, *.devacertusdelivers.vehichaul.com;
   #ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
   ssl_certificate     /var/rails/current/ssl/cloudflare/origin_server.crt;
